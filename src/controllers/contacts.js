@@ -6,9 +6,16 @@ import {
   getContacts,
   updateContact,
 } from '../services/contacts.js';
+import { ContactsFilters } from '../utils/createFilterData.js';
 
 export async function getContactsController(req, res, next) {
-  const contacts = await getContacts();
+  const contacts = await getContacts({
+    page: req.validatedQuery.page,
+    perPage: req.validatedQuery.perPage,
+    sortBy: req.validatedQuery.sortBy,
+    sortOrder: req.validatedQuery.sortOrder,
+    filter: ContactsFilters(req.validatedQuery),
+  });
 
   res.json({
     status: 200,
