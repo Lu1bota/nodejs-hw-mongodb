@@ -11,10 +11,14 @@ import { createContactSchema } from '../validation/createContactSchema.js';
 import { patchContactSchema } from '../validation/patchContactSchema.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { querySchema } from '../validation/querySchema.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { validateQuery } from '../middlewares/validateQuery.js';
 
 export const contactRouter = Router();
 
-contactRouter.get('/', validateBody(querySchema), getContactsController);
+contactRouter.use(authenticate);
+
+contactRouter.get('/', validateQuery(querySchema), getContactsController);
 
 contactRouter.get('/:contactId', isValidId, getContactByIdController);
 
