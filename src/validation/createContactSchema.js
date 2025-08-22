@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { CONTACT_TYPES } from '../constants/contactTypes.js';
+import { isValidObjectId } from 'mongoose';
 
 export const createContactSchema = Joi.object({
   name: Joi.string().min(3).max(20).required(),
@@ -10,4 +11,13 @@ export const createContactSchema = Joi.object({
     .valid(...Object.values(CONTACT_TYPES))
     .default(CONTACT_TYPES.PERSONAL)
     .required(),
+  userId: Joi.string().custom((value, helper) => {
+    const isValidId = isValidObjectId(value);
+
+    if (!isValidId) {
+      return helper.message('Not valid userId');
+    }
+
+    return value;
+  }),
 });

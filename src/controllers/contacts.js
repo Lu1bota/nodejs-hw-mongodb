@@ -9,12 +9,15 @@ import {
 import { ContactsFilters } from '../utils/createFilterData.js';
 
 export async function getContactsController(req, res, next) {
+  const filter = ContactsFilters(req.validatedQuery);
+  filter.userId = req.user._id;
+
   const contacts = await getContacts({
     page: req.validatedQuery.page,
     perPage: req.validatedQuery.perPage,
     sortBy: req.validatedQuery.sortBy,
     sortOrder: req.validatedQuery.sortOrder,
-    filter: ContactsFilters(req.validatedQuery),
+    filter,
   });
 
   res.json({
@@ -40,12 +43,14 @@ export async function getContactByIdController(req, res, next) {
 }
 
 export async function createContactController(req, res, next) {
-  const contact = await createContact(req.body);
+  const contact = await createContact({ ...req.body, userId: req.user._id });
 
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
-    data: contact,
+    data: {
+      contact,
+    },
   });
 }
 
