@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Підтвердження акаунта</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+      "
+    >
+      <tr>
+        <td
+          style="
+            padding: 20px;
+            text-align: center;
+            background: #0a66ff;
+            color: #ffffff;
+          "
+        ></td>
+      </tr>
+
+      <tr>
+        <td style="padding: 20px">
+          <p>Привіт{{#if firstName}}, {{firstName}}{{/if}}!</p>
+          <p>{{message}}</p>
+          <p style="margin: 24px 0; text-align: center">
+            <a
+              href="{{frontendUrl}}"
+              target="_blank"
+              style="
+                display: inline-block;
+                padding: 12px 20px;
+                background: #0a66ff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: bold;
+              "
+            >
+              Перейти на сайт
+            </a>
+          </p>
+          <p style="font-size: 12px; color: #666">
+            Якщо кнопка не працює, скопіюйте і вставте це посилання у
+            браузер:<br />
+            <a href="{{frontendUrl}}" target="_blank" style="color: #0a66ff"
+              >{{frontendUrl}}</a
+            >
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
