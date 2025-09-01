@@ -4,12 +4,14 @@ import {
   logoutUserController,
   refreshUserController,
   registerUserController,
+  resetPasswordController,
   sendResetEmailController,
 } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
   loginUserSchema,
   registerUserSchema,
+  resetPasswordSchema,
   sendResetEmailSchema,
 } from '../validation/auth.js';
 
@@ -31,4 +33,10 @@ authRouter.post(
   '/send-reset-email',
   validateBody(sendResetEmailSchema),
   sendResetEmailController,
+);
+
+authRouter.post(
+  '/reset-pwd',
+  validateBody(resetPasswordSchema),
+  resetPasswordController,
 );

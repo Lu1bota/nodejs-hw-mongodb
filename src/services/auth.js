@@ -82,38 +82,71 @@ export const logoutUser = async (sessionId) => {
 };
 
 export const sendResetEmail = async (email) => {
-  const user = await UsersCollection.findOne({ email });
+  try {
+    const user = await UsersCollection.findOne({ email });
+
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+
+    const host = getEnvVar(SEND_EMAIL.APP_DOMAIN);
+    const token = jwt.sign(
+      {
+        email,
+      },
+      getEnvVar(SEND_EMAIL.JWT_SECRET),
+      {
+        expiresIn: '5m',
+      },
+    );
+
+    const resetTemplatePath = path.join(TEMPLATES_DIR, 'send-reset-email.html');
+
+    const templateSource = (await fs.readFile(resetTemplatePath)).toString();
+
+    const tempalte = handlebars.compile(templateSource);
+    const html = tempalte({
+      firstName: user.name,
+      message:
+        'Будь ласка, натисніть кнопку нижче, щоб підтвердити свій акаунт.',
+      frontendUrl: `${host}/reset-password?token=${token}`,
+    });
+
+    await sendEmail({
+      from: getEnvVar(SEND_EMAIL.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};
+
+export const resetPassword = async (payload) => {
+  let entries;
+
+  try {
+    entries = jwt.verify(payload.token, getEnvVar(SEND_EMAIL.JWT_SECRET));
+  } catch {
+    throw createHttpError(401, 'Token is expired or invalid.');
+  }
+
+  const user = await UsersCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
 
   if (!user) {
     throw createHttpError(404, 'User not found!');
   }
 
-  const host = getEnvVar(SEND_EMAIL.APP_DOMAIN);
-  const token = jwt.sign(
-    {
-      email,
-    },
-    getEnvVar('JWT_SECRET'),
-    {
-      expiresIn: '5m',
-    },
-  );
+  const password = bcrypt.hash(payload.password, 10);
 
-  const resetTemplatePath = path.join(TEMPLATES_DIR, 'send-reset-email.html');
+  await UsersCollection.deleteOne({ email: entries.email });
 
-  const templateSource = (await fs.readFile(resetTemplatePath)).toString();
-
-  const tempalte = handlebars.compile(templateSource);
-  const html = tempalte({
-    firstName: user.name,
-    message: 'Будь ласка, натисніть кнопку нижче, щоб підтвердити свій акаунт.',
-    frontendUrl: `${host}/reset-password?token=${token}`,
-  });
-
-  await sendEmail({
-    from: getEnvVar(SEND_EMAIL.SMTP_FROM),
-    to: email,
-    subject: 'Reset your password',
-    html,
-  });
+  await UsersCollection.updateOne({ _id: user._id, password });
 };
