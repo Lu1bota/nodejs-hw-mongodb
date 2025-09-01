@@ -137,7 +137,6 @@ export const resetPassword = async (payload) => {
 
   const user = await UsersCollection.findOne({
     email: entries.email,
-    _id: entries.sub,
   });
 
   if (!user) {
