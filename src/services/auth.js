@@ -43,7 +43,7 @@ export const loginUser = async (payload) => {
     throw createHttpError(401, 'User not found');
   }
 
-  const userPassword = bcrypt.compare(payload.password, user.password);
+  const userPassword = await bcrypt.compare(payload.password, user.password);
 
   if (!userPassword) {
     throw createHttpError(401, 'Invalid email or password');
@@ -143,9 +143,9 @@ export const resetPassword = async (payload) => {
     throw createHttpError(404, 'User not found!');
   }
 
-  const password = bcrypt.hash(payload.password, 10);
+  const password = await bcrypt.hash(payload.password, 10);
 
-  await UsersCollection.deleteOne({ email: entries.email });
+  await SessionCollection.deleteOne({ userId: user._id });
 
-  await UsersCollection.updateOne({ _id: user._id, password });
+  await UsersCollection.updateOne({ email: entries.email }, { password });
 };
