@@ -17,7 +17,12 @@ export function setupServer() {
   const app = express();
 
   app.use(express.json());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: ['https://contacts-app-z97v.onrender.com'],
+      credentials: true,
+    }),
+  );
   app.use(cookieParser());
 
   app.use(
