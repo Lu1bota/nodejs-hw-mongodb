@@ -1,0 +1,78 @@
+tags:
+  - Auth
+summary: Register user
+operationId: postRegister
+description: Creates a new user account and returns user data without password.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            type: string
+            minLength: 3
+            maxLength: 20
+            example: test
+          email:
+            type: string
+            format: email
+            example: test66@hmail.com
+          password:
+            type: string
+            format: password
+            example: test66
+responses:
+  '201':
+    description: Successfully registered a user
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully registered a user!
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 68bad2c8a35d4fa3a6fe93fa
+                name:
+                  type: string
+                  example: test
+                email:
+                  type: string
+                  example: test66@hmail.com
+                createdAt:
+                  type: string
+                  format: date-time
+                  example: 2025-09-05T12:08:40.412Z
+                updatedAt:
+                  type: string
+                  format: date-time
+                  example: 2025-09-05T12:08:40.412Z
+  '401':
+    description: Unauthorized - session not found or already expired
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Session not found or expired

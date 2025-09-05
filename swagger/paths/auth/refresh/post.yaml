@@ -1,0 +1,42 @@
+security: []
+
+tags:
+  - Auth
+summary: Refresh user session
+operationId: postRefresh
+description: >
+  Refreshes an expired access token using a valid session.  
+  Session is identified by its ID stored in a cookie or header (depending on implementation).
+responses:
+  '200':
+    description: Successfully refreshed a session
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully refreshed a session!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: VSJziasdas+sLo6idnR7s3Vb98ue2ZE9Rakrcbqb
+  '401':
+    description: Unauthorized - session not found or already expired
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Session not found or expired
