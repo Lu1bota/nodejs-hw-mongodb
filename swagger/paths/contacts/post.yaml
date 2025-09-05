@@ -36,7 +36,8 @@ requestBody:
           contactType:
             description: 'Contacts contactType'
             type: string
-            example: ['work', 'home', 'personal']
+            enum: ['work', 'home', 'personal']
+            example: 'work'
           userId:
             description: "Contacts's userId"
             type: string
