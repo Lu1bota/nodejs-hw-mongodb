@@ -7,3 +7,11 @@
 .vscode
 .DS_Store
 .idea
+
+# Ігнорувати все в папці temp, крім .gitkeep
+temp/*
+!temp/.gitkeep
+
+# Ігнорувати все в папці uploads, крім .gitkeep
+uploads/*
+!uploads/.gitkeep

@@ -1,0 +1,33 @@
+security: []
+
+tags:
+  - Auth
+summary: Logout user
+operationId: postLogout
+description: >
+  Logs out the user by deleting the session in the database.  
+  Requires a valid `sessionId` cookie.  
+  Clears `sessionId` and `refreshToken` cookies in response.
+parameters:
+  - in: cookie
+    name: sessionId
+    required: true
+    schema:
+      type: string
+      example: 68bad2c8a35d4fa3a6fe93fa
+responses:
+  '204':
+    description: Successfully logged out. No content returned.
+  '401':
+    description: Unauthorized - session not found or already expired
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Session not found or expired
